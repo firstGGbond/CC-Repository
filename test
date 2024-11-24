@@ -1,0 +1,46 @@
+import pymysql
+
+host = 'localhost'
+user = 'root'
+password = '123456'
+database = 'test'
+
+# 创建数据库连接
+connection = pymysql.connect(host=host, user=user, password=password, database=database)
+print("数据库连接成功")
+
+# 创建游标对象
+cursor = connection.cursor()
+
+# SQL查询语句
+query = "SELECT * FROM user"
+
+# 执行查询
+cursor.execute(query)
+
+# 获取所有结果
+results = cursor.fetchall()
+
+# 获取列名
+columns = [column[0] for column in cursor.description]
+
+print("数据查询成功")
+
+from openpyxl import Workbook
+
+# 创建一个新的工作簿
+wb = Workbook()
+ws = wb.active
+
+# 写入列名
+ws.append(columns)
+
+# 写入数据
+for row in results:
+    ws.append(row)
+
+# 保存Excel文件
+excel_file = 'exported_data.xlsx'
+wb.save(excel_file)
+
+print(f"数据已导出到 {excel_file}")
